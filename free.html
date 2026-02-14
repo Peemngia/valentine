@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For My Special One ❤️</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Mali:wght@400;700&family=Caveat:wght@700&display=swap');
+
+        :root {
+            --primary-pink: #ff4d6d;
+            --dark-pink: #c9184a;
+            --soft-pink: #fff0f3;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #fff0f3 0%, #ffccd5 100%);
+            font-family: 'Mali', cursive;
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        /* ตกแต่งพื้นหลังลอยๆ */
+        .bg-decor {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.4;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px);
+            padding: 40px 30px;
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(255, 77, 109, 0.2);
+            border: 2px solid white;
+            text-align: center;
+            width: 380px;
+            max-width: 90%;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* แถบ Progress Bar กวนๆ */
+        .status-bar {
+            width: 100%;
+            height: 8px;
+            background: #eee;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        #progress {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-pink), var(--dark-pink));
+            transition: width 0.3s;
+        }
+
+        #emoji {
+            font-size: 6.5rem;
+            margin-bottom: 10px;
+            display: inline-block;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));
+        }
+
+        h1 {
+            color: var(--dark-pink);
+            font-size: 1.8rem;
+            margin: 10px 0;
+            line-height: 1.3;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            min-height: 120px;
+        }
+
+        button {
+            font-family: 'Mali', cursive;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s;
+        }
+
+        #yesBtn {
+            background: linear-gradient(45deg, #ff4d6d, #c9184a);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.4rem;
+            z-index: 1000;
+            box-shadow: 0 10px 20px rgba(255, 77, 109, 0.3);
+        }
+
+        #noBtn {
+            background: #adb5bd;
+            color: white;
+            padding: 10px 25px;
+            font-size: 1rem;
+            position: relative;
+            z-index: 100;
+        }
+
+        /* หน้าจอ Final */
+        #celebration {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, #ff758f, #ff4d6d);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            z-index: 10000;
+            text-align: center;
+        }
+
+        .heart-fall {
+            position: fixed;
+            top: -50px;
+            animation: fall linear forwards;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="mainUI">
+        <div id="emoji">🧸</div>
+        <h1 id="questionText">ตะเอง... <br>ยังรักเค้าอยู่มั้ย? ❤️</h1>
+        
+        <div class="status-bar">
+            <div id="progress"></div>
+        </div>
+        <div id="hint" style="font-size: 0.8rem; color: #ff758f;">อย่าลองกดปุ่มเทานะ... เตือนแล้วนะ!</div>
+        
+        <div class="btn-group">
+            <button id="yesBtn">รักที่สุด!</button>
+            <button id="noBtn">ไม่รัก</button>
+        </div>
+    </div>
+
+    <div id="celebration">
+        <div style="font-size: 8rem;">💖</div>
+        <h1 style="font-family: 'Caveat', cursive; font-size: 4rem;">I Knew It!</h1>
+        <p style="font-size: 1.5rem;">รักเหมือนกันนะเจ้าคนดื้อ <br> Happy Valentine's Day! ✨</p>
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const mainUI = document.getElementById('mainUI');
+        const celebration = document.getElementById('celebration');
+        const emojiDiv = document.getElementById('emoji');
+        const progress = document.getElementById('progress');
+        const hint = document.getElementById('hint');
+
+        let clickCount = 0;
+        const maxClicks = 20;
+
+        const emojis = ["🥺", "😟", "☹️", "😢", "😭", "💔", "😿", "😩", "😫", "😤", "😠", "😡", "🤬", "🤯", "🫠", "🤨", "🙄", "🤫", "😲", "😵‍💫"];
+        const quotes = [
+            "จริงหรอ? 🥺", "คิดใหม่อีกทีซิ", "เค้าจะร้องไห้นะ", "ใจร้ายจัง!", 
+            "ทำไมดื้อแบบนี้", "ง้อหน่อยยย", "กดไม่โดนหรอก", "ว้ายย พลาด!",
+            "ยังจะตามมาอีก!", "เหนื่อยยัง?", "เริ่มโกรธละนะ", "ยอมรักเถอะ!",
+            "จะเต็มจอแล้วนะ!", "หนีไม่พ้นหรอก", "ปุ่มหายแล้วนะ!", "อุ๊ยย เกือบโดน",
+            "เสียใจจริงๆ นะ", "อีกนิดเดียว!", "จะถึง 20 แล้ว!", "ยอมแพ้ซะเถอะ!"
+        ];
+
+        // สร้างของตกแต่งพื้นหลัง
+        function createDecor() {
+            const items = ['🌸', '✨', '💖', '☁️'];
+            for(let i=0; i<10; i++) {
+                const d = document.createElement('div');
+                d.className = 'bg-decor';
+                d.innerHTML = items[Math.floor(Math.random()*items.length)];
+                d.style.left = Math.random() * 100 + 'vw';
+                d.style.top = Math.random() * 100 + 'vh';
+                d.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                d.style.animationDelay = (Math.random() * 5) + 's';
+                document.body.appendChild(d);
+            }
+        }
+        createDecor();
+
+        function moveAndScale() {
+            if (clickCount < maxClicks) {
+                clickCount++;
+                
+                // 1. สุ่มย้ายปุ่ม (วาร์ปหนี)
+                const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 60) + 30;
+                const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 60) + 30;
+                noBtn.style.position = 'fixed';
+                noBtn.style.left = x + 'px';
+                noBtn.style.top = y + 'px';
+
+                // 2. อัปเดตสถานะ
+                emojiDiv.innerText = emojis[clickCount-1];
+                emojiDiv.style.transform = `scale(${1 + clickCount * 0.05}) rotate(${clickCount * 2}deg)`;
+                progress.style.width = (clickCount / maxClicks * 100) + '%';
+                noBtn.innerText = quotes[clickCount-1];
+                hint.innerText = `พยายามหนีครั้งที่: ${clickCount}/${maxClicks}`;
+
+                // 3. ขยายปุ่ม "รักที่สุด" (ขยายแบบคุกคาม)
+                let scaleVal = 1 + (clickCount * 1.6); 
+                yesBtn.style.transform = `scale(${scaleVal})`;
+
+                // 4. ขั้นสุดท้าย
+                if (clickCount >= maxClicks) {
+                    noBtn.style.display = 'none';
+                    yesBtn.style.transform = `scale(50)`; // บังมิดจอ
+                    yesBtn.style.width = "100vw";
+                    yesBtn.style.height = "100vh";
+                    yesBtn.style.borderRadius = "0";
+                    yesBtn.innerText = "ยอมแล้วจ้าาา รักที่สุด! ❤️";
+                    hint.innerText = "กดยอมรับเดี๋ยวนี้!";
+                }
+            }
+        }
+
+        noBtn.addEventListener('mouseover', () => { if(window.innerWidth > 768) moveAndScale(); });
+        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveAndScale(); });
+
+        yesBtn.addEventListener('click', () => {
+            celebration.style.display = 'flex';
+            mainUI.style.display = 'none';
+            
+            // เอฟเฟกต์พลุหัวใจ
+            setInterval(() => {
+                const h = document.createElement('div');
+                h.className = 'heart-fall';
+                h.innerHTML = ['❤️','💖','✨','🌸'][Math.floor(Math.random()*4)];
+                h.style.left = Math.random() * 100 + 'vw';
+                h.style.fontSize = (Math.random() * 20 + 25) + 'px';
+                h.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                document.body.appendChild(h);
+                setTimeout(() => h.remove(), 4000);
+            }, 70);
+        });
+    </script>
+</body>
+</html>
